@@ -186,7 +186,7 @@ class PathView(MethodView):
                     filename_list = filename.split("_")
                     if len(filename_list) >= 2:
                         filename_dir = "/".join(filename_list[:-1])
-                        filename_dir = os.path.join(path, filename)
+                        filename_dir = os.path.join(path, filename_dir)
                         Path(filename_dir).mkdir(parents=True, exist_ok=True)
                     file.save(os.path.join(path, "/".join(filename_list)))
                 except Exception as e:
