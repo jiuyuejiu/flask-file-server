@@ -172,10 +172,23 @@ class PathView(MethodView):
         info = {}
         if os.path.isdir(path):
             files = request.files.getlist('files[]')
+            # >>> import requests
+            # >>> files = {'files[]': open('test_test_hello', 'rb')}
+            # >>> r = requests.post('http://127.0.0.1:5000', files=files)
+            # >>> r.status_code
+            # 200
+            # m @ m in /tmp/test/test [23:55:47] 
+            # $ ls
+            # hello
             for file in files:
                 try:
                     filename = secure_filename(file.filename)
-                    file.save(os.path.join(path, filename))
+                    filename_list = filename.split("_")
+                    if len(filename_list) >= 2:
+                        filename_dir = "/".join(filename_list[:-1])
+                        filename_dir = os.path.join(path, filename)
+                        Path(filename_dir).mkdir(parents=True, exist_ok=True)
+                    file.save(os.path.join(path, "/".join(filename_list)))
                 except Exception as e:
                     info['status'] = 'error'
                     info['msg'] = str(e)
